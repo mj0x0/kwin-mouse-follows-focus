@@ -1,0 +1,20 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "moshejo@proton.me",
+                "Name": "mj0x0"
+            }
+        ],
+        "Category": "Window Management",
+        "Description": "Warps the pointer onto a window when it gains focus",
+        "EnabledByDefault": false,
+        "Icon": "input-mouse",
+        "Id": "mousefollowsfocus",
+        "License": "MIT",
+        "Name": "Mouse Follows Focus",
+        "Version": "1.0"
+    },
+    "X-Plasma-API": "javascript"
+}
