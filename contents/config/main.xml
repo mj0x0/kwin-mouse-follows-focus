@@ -9,6 +9,12 @@
       <label>Only warp when the pointer is not already on the focused window</label>
       <default>true</default>
     </entry>
+    <entry name="borderMargin" type="Int">
+      <label>Slack around a window (px) that still counts as "on" it</label>
+      <default>32</default>
+      <min>0</min>
+      <max>400</max>
+    </entry>
     <entry name="debug" type="Bool">
       <label>Log activity to the systemd journal</label>
       <default>false</default>
