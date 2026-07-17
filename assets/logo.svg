@@ -1,0 +1,34 @@
+<svg width="512" height="512" viewBox="0 0 512 512" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Mouse Follows Focus</title>
+  <desc>A rounded blue app icon showing a white window with a mouse cursor arriving on it and a dashed motion trail behind.</desc>
+  <defs>
+    <clipPath id="round"><rect x="16" y="16" width="480" height="480" rx="112"/></clipPath>
+    <clipPath id="win"><rect x="150" y="112" width="240" height="182" rx="24"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#round)">
+    <rect x="16" y="16" width="480" height="480" fill="#2ea0ff"/>
+    <polygon points="512,16 512,512 16,512" fill="#1478c6"/>
+  </g>
+
+  <g>
+    <rect x="150" y="112" width="240" height="182" rx="24" fill="#ffffff"/>
+    <g clip-path="url(#win)">
+      <rect x="150" y="112" width="240" height="36" fill="#d7e6f4"/>
+      <rect x="172" y="170" width="180" height="16" rx="5" fill="#e6eef6"/>
+      <rect x="172" y="200" width="205" height="16" rx="5" fill="#e6eef6"/>
+      <rect x="172" y="230" width="150" height="16" rx="5" fill="#e6eef6"/>
+    </g>
+    <circle cx="178" cy="130" r="8" fill="#ff5f57"/>
+    <circle cx="204" cy="130" r="8" fill="#febc2e"/>
+    <circle cx="230" cy="130" r="8" fill="#28c840"/>
+  </g>
+
+  <polyline points="360,312 312,238 255,150" fill="none" stroke="#ffffff" stroke-opacity="0.4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 16"/>
+
+  <g fill="#17242f" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">
+    <path opacity="0.16" transform="translate(360,312) scale(5)" d="M0 0 L0 17.5 L4.7 13.2 L7.9 20.5 L10.4 19.4 L7.2 12.3 L12 12.3 Z"/>
+    <path opacity="0.32" transform="translate(312,238) scale(6)" d="M0 0 L0 17.5 L4.7 13.2 L7.9 20.5 L10.4 19.4 L7.2 12.3 L12 12.3 Z"/>
+    <path transform="translate(255,150) scale(7)" d="M0 0 L0 17.5 L4.7 13.2 L7.9 20.5 L10.4 19.4 L7.2 12.3 L12 12.3 Z"/>
+  </g>
+</svg>
