@@ -6,9 +6,10 @@
     (Polonium), clicking a taskbar entry, a new window grabbing focus —
     the pointer is warped onto the newly focused window.
 
-    Crucially, if focus changed because the pointer was already over the window
-    (ordinary focus-follows-mouse hovering), nothing happens, so casually moving
-    the mouse across windows never yanks the cursor around.
+    Crucially, if focus changed because the pointer was already over (or right
+    beside) the window — ordinary focus-follows-mouse hovering, or resting on the
+    seam between two tiles — nothing happens, so casually moving the mouse across
+    windows never yanks the cursor around.
 
     The warp itself reuses KWin's own built-in action "Move Mouse to Focus"
     (shortcut id "MoveMouseToFocus"), invoked over D-Bus via kglobalaccel. That
@@ -32,9 +33,14 @@ const PREFIX = "mousefollowsfocus: ";
 const INTERACTION_GRACE_MS = 300;
 
 const config = {
-    // When true, skip the warp if the pointer already sits on the newly focused
-    // window (i.e. focus most likely followed the mouse there).
+    // When true, skip the warp if the pointer already sits on (or right next to)
+    // the newly focused window — i.e. focus most likely followed the mouse there.
     onlyWhenPointerOutside: true,
+    // How many pixels of slack around a window's frame still count as "on" it.
+    // This is what stops the cursor being yanked when you hover the seam/gap
+    // between two tiles to grab a resize handle. Increase it if you use large
+    // tile gaps and focus is still stolen there; 0 restores a strict inside-test.
+    borderMargin: 32,
     // Enable for debug logging to journalctl
     debug: false,
 };
@@ -44,6 +50,7 @@ let lastInteraction = 0;
 
 function loadConfig() {
     config.onlyWhenPointerOutside = readConfig("onlyWhenPointerOutside", true);
+    config.borderMargin = readConfig("borderMargin", 32);
     config.debug = readConfig("debug", false);
 }
 
@@ -89,15 +96,25 @@ function isEligible(window) {
     return true;
 }
 
-/** Whether the global pointer currently lies within the window's frame. */
-function pointerInside(window) {
+/**
+ * Whether the global pointer lies within `margin` pixels of the window's frame.
+ *
+ * A plain inside-test isn't enough for tiled layouts: when two tiles sit side by
+ * side with a gap, the pointer hovering that gap (to grab a resize handle) is
+ * outside *both* frames, yet focus-follows-mouse may hand focus to the neighbour.
+ * Warping then yanks the cursor off the seam. Treating the frame as inflated by a
+ * small margin absorbs the gap and the resize-handle band, so seam-hovering no
+ * longer triggers a warp — while a genuine switch to a window whose nearest edge
+ * is farther than `margin` away still does.
+ */
+function pointerNear(window, margin) {
     const p = workspace.cursorPos;
     const g = window.frameGeometry;
     return (
-        p.x >= g.x &&
-        p.x < g.x + g.width &&
-        p.y >= g.y &&
-        p.y < g.y + g.height
+        p.x >= g.x - margin &&
+        p.x < g.x + g.width + margin &&
+        p.y >= g.y - margin &&
+        p.y < g.y + g.height + margin
     );
 }
 
@@ -143,8 +160,8 @@ function onWindowActivated(window) {
         return;
     }
 
-    if (config.onlyWhenPointerOutside && pointerInside(window)) {
-        debug("pointer already on '" + window.caption + "', not warping");
+    if (config.onlyWhenPointerOutside && pointerNear(window, config.borderMargin)) {
+        debug("pointer already on/near '" + window.caption + "', not warping");
         return;
     }
 
@@ -157,7 +174,8 @@ function main() {
     workspace.windowList().forEach(trackWindow);
     workspace.windowAdded.connect(trackWindow);
     workspace.windowActivated.connect(onWindowActivated);
-    log("started (onlyWhenPointerOutside=" + config.onlyWhenPointerOutside + ")");
+    log("started (onlyWhenPointerOutside=" + config.onlyWhenPointerOutside +
+        ", borderMargin=" + config.borderMargin + ")");
 }
 
 main();

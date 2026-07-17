@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build .kwinscript
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          zip -r "mousefollowsfocus-${version}.kwinscript" metadata.json contents
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            mousefollowsfocus-*.kwinscript \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes

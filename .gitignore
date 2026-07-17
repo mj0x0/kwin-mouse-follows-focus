@@ -1,0 +1,16 @@
+# Packaged script / KDE Store upload artifacts (built by CI on tag)
+*.kwinscript
+*.tar.gz
+*.tar.zst
+*.zip
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.kate-swp
+*~
+
+# OS junk
+.DS_Store
+Thumbs.db
