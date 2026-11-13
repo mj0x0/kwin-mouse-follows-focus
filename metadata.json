@@ -16,5 +16,6 @@
         "Name": "Mouse Follows Focus",
         "Version": "1.0"
     },
-    "X-Plasma-API": "javascript"
+    "X-Plasma-API": "javascript",
+    "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted"
 }
